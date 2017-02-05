@@ -6,7 +6,7 @@ var config = require('./key.js');
 //*
 var j = schedule.scheduleJob(config.schedule, function(){
   baidu.push();
-  baidu.checkSite();
+  baidu.check();
 });
 //*/
 
