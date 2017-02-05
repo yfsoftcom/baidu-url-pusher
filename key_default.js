@@ -9,7 +9,7 @@ module.exports = {
     token: '*****',
     sites:[
       {
-        result: {to: '1794947912@qq.com', subject: '新版百度收录结果'},
+        result: {to: '1794947912@qq.com', subject: '百度收录'},
         domain: 'www.xinyangjlm.com',
         update: false,
         urls:

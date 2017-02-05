@@ -73,12 +73,20 @@ function checkSite(){
         var doc = $(body);
         if(doc.find('.content_none').length > 0){
           //
-          var result = 'O NO, domain: '+ site.domain + ' ,has not get yet~ @ ' + new Date().toLocaleString();
-          emailer.send({to: site.result.to, subject: site.result.subject, result: result} , mailCallback);
+          var result = 'Ops,'+ site.domain + ',has not get yet~';
+          emailer.send({
+            to: site.result.to,
+            subject: 'Ops,'+ site.domain + site.result.subject + '@ ' + new Date().toLocaleString(),
+            result: result
+          } , mailCallback);
         }else{
           var $result = doc.find('.site_tip p b');
-          var result = 'O YE, domain: '+ site.domain + ' , ' + $result.text() + '@ ' + new Date().toLocaleString();
-          emailer.send({to: site.result.to, subject: site.result.subject, result: result}, mailCallback);
+          var result = 'Yeah,' + $result.text();
+          emailer.send({
+            to: site.result.to,
+            subject: 'Yeah,' + site.domain + site.result.subject + '@ ' + new Date().toLocaleString(),
+            result: result
+          }, mailCallback);
         }
       }else{
         console.log(error);
