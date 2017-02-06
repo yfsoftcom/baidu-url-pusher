@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var parallel = require('async/parallel');
+var each = require('async/each');
+var map = require('async/map');
 var request = require('request');
 var jsdom = require("jsdom");
 var config = require('./key.js');
@@ -24,6 +26,16 @@ function buildBaiduRequest(method, domain, urls){
     },
     body: urls
   };
+}
+
+function execute(url, callback){
+  request(url, function(error, response, body){
+    if (!error && response.statusCode == 200) {
+      callback(null, body);
+    }else{
+      callback(error);
+    }
+  });
 }
 
 function buildBaiduUrls(domain, urls){
@@ -63,8 +75,6 @@ function push(){
 function mailCallback(err, data){
   if(err){
     console.log(err);
-  }else{
-    console.log(data);
   }
 };
 
@@ -86,19 +96,12 @@ function check(){
           result: err
         } , mailCallback);
       }else{
-        if(results[0][1]){
-          emailer.send({
-            to: site.result.to,
-            subject: 'Yeah,' + site.domain + site.result.subject + '@ ' + new Date().toLocaleString(),
-            result: results[0][0] + ';关键字排名:' + results[1]
-          }, mailCallback);
-        }else{
-          emailer.send({
-            to: site.result.to,
-            subject: 'Ops,'+ site.domain + site.result.subject + '@ ' + new Date().toLocaleString(),
-            result: results[0][0] + ';关键字排名:' + results[1]
-          }, mailCallback);
-        }
+        emailer.send({
+          to: site.result.to,
+          subject: results[0][1]? ('Yeah,' + site.domain + site.result.subject + '@ ' + new Date().toLocaleString()) : ('Ops,'+ site.domain + site.result.subject + '@ ' + new Date().toLocaleString()),
+          result: results[0][0] + ';<br/>Keywords Sort:' + results[1]
+        }, mailCallback);
+
       }
     });
   });
@@ -106,46 +109,64 @@ function check(){
 }
 
 
-function checkKeywords(cb, site){
-  var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(site.keywords.join(''));
-  request(url, function(error, response, body){
-    if (!error && response.statusCode == 200) {
-      var doc = $(body);
-      var list = doc.find('#content_left .result>.f13>a');
-      var l = list.length;
-      for(var i = 0 ; i < l ; i++){
-        if(_.startsWith(list[i].innerHTML, site.domain)){
-          //在首页
-          cb(null, '在首页,NO:' + (i+1));
-          return;
+function checkKeyword(domain, keyword, cb){
+  each([1, 2, 3, 4, 5],
+    function(pn, callback){
+      var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '&pn=' + ((pn-1)*10);
+      execute(url, function(err, body){
+        if(err) { cb(err); return;}
+        var doc = $(body);
+        var list = doc.find('#content_left .result>.f13>a');
+        var l = list.length;
+
+        for(var i = 0 ; i < l ; i++){
+          if(_.startsWith(list[i].innerHTML, domain)){
+            callback({pn: pn, no: (i+1)});
+            return;
+          }
         }
+        callback();
+      });
+    },
+    function(error){
+      if(error){
+        cb(null, "Find Keyword: " + keyword + " In Page: " + error.pn + ' ; NO: ' + error.no);
+      }else{
+        cb(null, 'Cant Find Keyword: ' + keyword + '.');
       }
-      cb(null, '不在首页');
-    }else{
-      cb(error);
     }
-  });
+  )
+
+}
+
+function checkKeywords(cb, site){
+  map(site.keywords,
+    function(keyword, callback){
+      checkKeyword(site.domain, keyword, callback);
+    },
+    function(error, results){
+      if(error){
+        cb(error); return;
+      }
+      cb(null, results.join('<br/>'));
+    }
+  )
 }
 
 function checkSite(cb, site){
   var url = 'http://www.baidu.com/s?wd=site%3A' + site.domain;
-  request(url, function(error, response, body){
-    if (!error && response.statusCode == 200) {
-      var doc = $(body);
-      if(doc.find('.content_none').length > 0){
-        //
-        var result = 'Ops,'+ site.domain + ',has not get yet~';
-        cb(null, result, true);
-      }else{
-        var $result = doc.find('.site_tip p b');
-        var result = 'Yeah,' + $result.text();
-        cb(null, result, false);
-
-      }
+  execute(url, function(err, body){
+    if(err) { cb(err); return;}
+    var doc = $(body);
+    if(doc.find('.content_none').length > 0){
+      var result = 'Ops,'+ site.domain + ',has not get yet~';
+      cb(null, result, false);
     }else{
-      cb(error);
+      var $result = doc.find('.site_tip p b');
+      var result = 'Yeah,' + $result.text();
+      cb(null, result, true);
     }
-  });
+  })
 }
 module.exports.push = push;
 module.exports.check = check;
