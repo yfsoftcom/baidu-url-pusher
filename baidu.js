@@ -99,7 +99,7 @@ function check(){
         emailer.send({
           to: site.result.to,
           subject: results[0][1]? ('Yeah,' + site.domain + site.result.subject + '@ ' + new Date().toLocaleString()) : ('Ops,'+ site.domain + site.result.subject + '@ ' + new Date().toLocaleString()),
-          result: results[0][0] + ';<br/>Keywords Sort:' + results[1]
+          result: results[0][0] + ';<br/>Keywords Sort:<br/>' + results[1]
         }, mailCallback);
 
       }
