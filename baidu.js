@@ -115,7 +115,7 @@ function check(){
 function checkKeyword(domain, keyword, cb){
   each([1, 2, 3, 4, 5],
     function(pn, callback){
-      var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '&pn=' + ((pn-1)*10);
+      var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '&pn=' + ((pn-1)*10) + '&ie=utf-8';
       execute(url, function(err, body){
         if(err) { cb(err); return;}
         var doc = $(getBodyContent(body));
