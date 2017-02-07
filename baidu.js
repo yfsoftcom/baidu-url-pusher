@@ -116,13 +116,16 @@ function checkKeyword(domain, keyword, cb){
   each([1, 2, 3, 4, 5],
     function(pn, callback){
       var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '\&pn=' + ((pn-1)*10);
+      console.log(url);
       execute(url, function(err, body){
         if(err) { cb(err); return;}
-        var doc = $(getBodyContent(body));
+        body = getBodyContent(body);
+        console.log(body);
+        var doc = $(body);
         var list = doc.find('#content_left .result>.f13>a');
         var l = list.length;
-
         for(var i = 0 ; i < l ; i++){
+          console.log(list[i].innerHTML);
           if(_.startsWith(list[i].innerHTML, domain)){
             callback({pn: pn, no: (i+1)});
             return;
