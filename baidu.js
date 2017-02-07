@@ -119,10 +119,8 @@ function checkKeyword(domain, keyword, cb){
       console.log(url);
       execute(url, function(err, body){
         if(err) { cb(err); return;}
-        body = getBodyContent(body);
-        console.log(body);
-        var doc = $(body);
-        var list = doc.find('#content_left .result>.f13>a');
+        var doc = $(getBodyContent(body));
+        var list = doc.find('#content_left .result>.f13>a.c-showurl');
         var l = list.length;
         for(var i = 0 ; i < l ; i++){
           console.log(list[i].innerHTML);
