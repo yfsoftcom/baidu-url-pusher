@@ -71,6 +71,9 @@ function push(){
   });
 }
 
+function getBodyContent(body){
+  return /<body[^>]*>([\s\S]*)<\/body>/.exec(body)[0];
+}
 
 function mailCallback(err, data){
   if(err){
@@ -115,7 +118,7 @@ function checkKeyword(domain, keyword, cb){
       var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '&pn=' + ((pn-1)*10);
       execute(url, function(err, body){
         if(err) { cb(err); return;}
-        var doc = $(body);
+        var doc = $(getBodyContent(body));
         var list = doc.find('#content_left .result>.f13>a');
         var l = list.length;
 
@@ -157,7 +160,7 @@ function checkSite(cb, site){
   var url = 'http://www.baidu.com/s?wd=site%3A' + site.domain;
   execute(url, function(err, body){
     if(err) { cb(err); return;}
-    var doc = $(body);
+    var doc = $(getBodyContent(body));
     if(doc.find('.content_none').length > 0){
       var result = 'Ops,'+ site.domain + ',has not get yet~';
       cb(null, result, false);

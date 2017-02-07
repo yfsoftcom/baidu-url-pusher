@@ -11,6 +11,7 @@ module.exports = {
       {
         result: {to: '1794947912@qq.com', subject: '百度收录'},
         domain: 'www.xinyangjlm.com',
+        keywords: ['新扬卷帘门', '扬州卷帘门'],
         update: false,
         urls:
           'http://www.xinyangjlm.com/index.html\n' +
