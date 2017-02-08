@@ -112,8 +112,11 @@ function check(){
 }
 
 
-function checkKeyword(domain, keyword, cb){
-  each([1, 2, 3, 4, 5],
+function checkKeyword(domain, page, keyword, cb){
+  var pages = _.map(Array(page), function(item, index){
+    return index + 1;
+  })
+  each(pages,
     function(pn, callback){
       var url = 'http://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '\&pn=' + ((pn-1)*10);
       execute(url, function(err, body){
@@ -144,7 +147,7 @@ function checkKeyword(domain, keyword, cb){
 function checkKeywords(cb, site){
   map(site.keywords,
     function(keyword, callback){
-      checkKeyword(site.domain, keyword, callback);
+      checkKeyword(site.domain, site.result.page || 5,  keyword, callback);
     },
     function(error, results){
       if(error){
