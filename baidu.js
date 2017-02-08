@@ -67,6 +67,7 @@ function push(){
         var urls = _.map($(body).find('loc'), function(item){
           return item.innerHTML;
         });
+        urls.push('http://' + site.domain);
         urls = urls.join('\n');
         request(buildBaiduUrls(site.domain, urls), pushCallback);
       })
