@@ -62,12 +62,23 @@ function pushCallback(error, response, body){
 
 function push(){
   sites.forEach(function(site){
-    if(site.update){
-      request(buildBaiduUpdate(site.domain, site.update), pushCallback);
+    if(site.sitemap){
+      execute('http://' + site.domain + '/' + site.sitemap, function(err, body){
+        var urls = _.map($(body).find('loc'), function(item){
+          return item.innerHTML;
+        });
+        urls = urls.join('\n');
+        request(buildBaiduUrls(site.domain, urls), pushCallback);
+      })
+    }else{
+      if(site.update){
+        request(buildBaiduUpdate(site.domain, site.update), pushCallback);
+      }
+      if(site.urls){
+        request(buildBaiduUrls(site.domain, site.urls), pushCallback);
+      }
     }
-    if(site.urls){
-      request(buildBaiduUrls(site.domain, site.urls), pushCallback);
-    }
+
   });
 }
 

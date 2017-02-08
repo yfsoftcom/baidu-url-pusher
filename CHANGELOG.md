@@ -1,5 +1,9 @@
 - 1.0.0 (17/02/08)
 
+- add site.sitemap for auto push urls
+
+- 1.0.0 (17/02/08)
+
 Feature:
 
 - add site.result.page for keyword search result check
