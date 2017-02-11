@@ -9,13 +9,14 @@ mailer.init(config.mail)
 
 
 const emailTemplate = `
-  <h3>Domain: http://<%= domain%> 百度解析结果</h3>
+  <h4>Domain: http://<%= domain%> 百度解析结果</h4>
   <h4>收录结果:</h4>
+  <br/>
   <p><b><%= site%><b/></p>
-  <h4>关键字查询结果<h4/>
+  <h4>关键字查询结果</h4>
   <% keywords.forEach(function(item){
     %>
-  <p><b><%= item.keyword %>:</b> <%= item.rank %></p>
+  <p><b><%= item.keyword %>:</b> <% if(!item.rank) {%>未找到<% }else{ %>在第 <%= item.rank.page %> 页<% }%></p>
   <%}) %>
 `
 
