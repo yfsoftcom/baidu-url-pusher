@@ -3,4 +3,4 @@ require('babel-core/register')({
 	presets: ['es2015', 'stage-2']
 });
 require('babel-polyfill');
-require('./baidu.test.js');
+require('./test.js');

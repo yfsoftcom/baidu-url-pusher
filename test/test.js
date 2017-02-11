@@ -1,7 +1,6 @@
 import {baidu} from 'yf-website-tool'
-import schedule from 'node-schedule'
-import config from './key'
-import mailer from './email'
+import config from '../key'
+import mailer from '../email'
 mailer.init(config.mail)
 
 const jobFun = async () => {
@@ -31,5 +30,3 @@ const jobFun = async () => {
 }
 
 jobFun()
-
-schedule.scheduleJob(config.schedule, jobFun)
