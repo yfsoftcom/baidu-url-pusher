@@ -28,7 +28,7 @@ module.exports = {
         subject: options.subject, // 标题
         //text和html两者只支持一种
         text: options.result  ,
-        html: '<p>' + options.result + '</p>' // html 内容
+        html: options.result // html 内容
     };
     // send mail with defined transport object
     transporter.sendMail(mailOptions, function(error, info){
