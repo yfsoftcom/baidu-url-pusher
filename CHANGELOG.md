@@ -1,3 +1,7 @@
+- 1.0.1 (17/02/11)
+
+- convert to es7
+
 - 1.0.0 (17/02/08)
 
 - add site.sitemap for auto push urls
