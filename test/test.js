@@ -24,6 +24,7 @@ const jobFun = async () => {
       data.push = await baidu.pusher.pushUrls(site)
       const result = ejs.render(emailTemplate, data)
       console.log(result)
+      console.log(data)
     }catch(e){
       console.log(e)
     }
