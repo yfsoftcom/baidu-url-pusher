@@ -19,8 +19,8 @@ const jobFun = async () => {
     let site = config.baidu.sites[i]
     let data = {domain: site.domain}
     try{
-      data.site = await baidu.crawler.checkSite(site.domain)
-      data.keywords = await baidu.crawler.checkKeywords(site)
+      data.site = await baidu.spider.checkSite(site.domain)
+      data.keywords = await baidu.spider.checkKeywords(site)
       data.push = await baidu.pusher.pushUrls(site)
       const result = ejs.render(emailTemplate, data)
       console.log(result)
