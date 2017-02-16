@@ -16,7 +16,7 @@ const emailTemplate = `
   <h4>关键字查询结果</h4>
   <% keywords.forEach(function(item){
     %>
-  <p><b><%= item.keyword %>:</b> <% if(!item.rank) {%>未找到<% }else{ %>在第 <%= item.rank.page %> 页<% }%></p>
+  <p><b><%= item.keyword %>:</b> <% if(!item.rank) {%>未找到<% }else{ %>在第 <%= item.rank %> 位<% }%></p>
   <%}) %>
 `
 
